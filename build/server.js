@@ -11,6 +11,7 @@ const path = require('path')
 const express = require('express')
 const webpack = require('webpack')
 const proxyMiddleware = require('http-proxy-middleware')
+const passport = require('passport')
 const webpackConfig = (process.env.NODE_ENV === 'testing' || process.env.NODE_ENV === 'production')
   ? require('./webpack.prod.conf')
   : require('./webpack.dev.conf')
@@ -89,8 +90,12 @@ const readyPromise = new Promise(resolve => {
 const server = app.listen(port)
 
 //setup socket io
-//const io = require('socket.io')(server);
+const io = require('socket.io')(server);
 
+//setup db connection
+const db = require('../config/db/db.base.conf')
+app.post('/login', passport.authenticate('local', { successRedirect: '/',
+                                                    failureRedirect: '/login' }));
 
 console.log('> Starting dev server...')
 devMiddleware.waitUntilValid(() => {
