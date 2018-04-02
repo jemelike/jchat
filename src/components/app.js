@@ -1,0 +1,1 @@
+export default { 'content':"<p>The app loads here</p>"}

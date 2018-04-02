@@ -1,3 +1,4 @@
+
 const config = require('../config')
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
@@ -72,6 +73,8 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(cors())
 
@@ -94,9 +97,14 @@ const io = require('socket.io')(server);
 
 //setup db connection
 const db = require('../config/db/db.base.conf')
-app.post('/login', passport.authenticate('local', { successRedirect: '/',
-                                                    failureRedirect: '/login' }));
+const local = require('../config/passport/local.passport')
+passport.use(local)
 
+app.post('/login', passport.authenticate('local', { successRedirect: '/profile?',
+                                                    failureRedirect: '/' }));
+
+app.get('/login', (req, res) => {res.send('FAILED')})
+//Passport and strategies
 console.log('> Starting dev server...')
 devMiddleware.waitUntilValid(() => {
   console.log('> Listening at ' + uri + '\n')

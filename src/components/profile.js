@@ -1,0 +1,1 @@
+    console.log('you have accessed your profile')
