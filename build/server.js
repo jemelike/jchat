@@ -28,6 +28,7 @@ const autoOpenBrowser = !!config.dev.autoOpenBrowser
 const proxyTable = config.dev.proxyTable
 
 const app = express()
+
 const compiler = webpack(webpackConfig)
 
 const devMiddleware = require('webpack-dev-middleware')(compiler, {
@@ -73,11 +74,12 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-app.use(passport.initialize());
-app.use(passport.session());
+//app.use(passport.initialize());
+//app.use(passport.session());
 
 app.use(cors())
-
+//Load Model
+let User = require('../src/models/Users')
 
 // serve pure static assets
 const staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
@@ -90,21 +92,71 @@ const readyPromise = new Promise(resolve => {
   _resolve = resolve
 })
 
+const session = require('express-session')
+let sess = {
+  secret: 'keyboard cat',
+  cookie: {}
+}
+ 
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1) // trust first proxy
+  sess.cookie.secure = true // serve secure cookies
+}
+
+app.use(session(sess))
+
 const server = app.listen(port)
 
 //setup socket io
-const io = require('socket.io')(server);
+const io = require('socket.io')(server)
 
 //setup db connection
 const db = require('../config/db/db.base.conf')
-const local = require('../config/passport/local.passport')
-passport.use(local)
+//const localLogin = require('../config/passport/local.login.passport')
+//const localSignup= require('../config/passport/local.signup.passport')
 
-app.post('/login', passport.authenticate('local', { successRedirect: '/profile?',
-                                                    failureRedirect: '/' }));
+//passport.use(localLogin)
+//passport.use(localSignup)
 
-app.get('/login', (req, res) => {res.send('FAILED')})
-//Passport and strategies
+app.post('/login', (req, res) =>{
+
+  let username = req.body.username
+  let password = req.body.password
+
+  let User = require('../src/models/Users')
+
+  User.findOne({username:username, password:password},   (err, user) => {
+    if (err) { return done(err); }
+    if (user) {
+      res.send('You logged in')
+    }else{
+      res.send('Congrats you have logged in')
+    }
+  })
+  
+});
+
+app.post('/register', (req,res) =>{
+  let username = req.body.username
+  let password = req.body.password
+  let first = req.body.fname
+  let last = req.body.lname
+  let email = req.body.email
+
+  name = first + " " + last
+
+  let new_user = new User({
+    username,
+    email,
+    password,
+    name,
+    available: "online"
+  })
+
+  new_user.save(err => console.error(err))
+  res.send('User: '+username+' registered')
+});
+
 console.log('> Starting dev server...')
 devMiddleware.waitUntilValid(() => {
   console.log('> Listening at ' + uri + '\n')
