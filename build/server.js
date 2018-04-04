@@ -4,15 +4,30 @@ if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
 }
 
+//open a file or uri with the users preferred application (browser, editor, etc), cross platform
 const opn = require('opn')
+
+//CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.
 const cors = require('cors')
+
+// HTTP request logger middleware for node.js
 const morgan = require('morgan')
+
+// Node.js body parsing middleware
 const bodyParser = require('body-parser')
+
+//This is an exact copy of the NodeJS ’path’ module published to the NPM registry
 const path = require('path')
+
+//Fast, unopinionated, minimalist web framework for node.
 const express = require('express')
+
+//webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.
 const webpack = require('webpack')
+
+//Node.js proxying made simple. Configure proxy middleware with ease for connect, express, browser-sync and many more.
 const proxyMiddleware = require('http-proxy-middleware')
-const passport = require('passport')
+
 const webpackConfig = (process.env.NODE_ENV === 'testing' || process.env.NODE_ENV === 'production')
   ? require('./webpack.prod.conf')
   : require('./webpack.dev.conf')
@@ -26,16 +41,22 @@ const autoOpenBrowser = !!config.dev.autoOpenBrowser
 // Define HTTP proxies to your custom API backend
 // https://github.com/chimurai/http-proxy-middleware
 const proxyTable = config.dev.proxyTable
-
 const app = express()
-
 const compiler = webpack(webpackConfig)
 
+//An express-style development middleware for use with webpack bundles and allows for serving of the files emitted from webpack. This should be used for development only
 const devMiddleware = require('webpack-dev-middleware')(compiler, {
   publicPath: webpackConfig.output.publicPath,
   quiet: true
 })
 
+/**
+ Webpack hot reloading using only webpack-dev-middleware. This allows you to add hot reloading into an existing server without webpack-dev-server.
+
+ This module is only concerned with the mechanisms to connect a browser client to a webpack server & receive updates. It will subscribe to changes from the server and execute those changes using webpack's HMR API. Actually making your application capable of using hot reloading to make seamless changes is out of scope, and usually handled by another library.
+
+ If you're using React then some common options are react-transform-hmr and react-hot-loader
+ */
 const hotMiddleware = require('webpack-hot-middleware')(compiler, {
   log: false,
   heartbeat: 2000
@@ -58,7 +79,7 @@ Object.keys(proxyTable).forEach(function (context) {
   app.use(proxyMiddleware(options.filter || context, options))
 })
 
-// handle fallback for HTML5 history API
+// handle fallback for HTML5 history API https://www.npmjs.com/package/connect-history-api-fallback
 app.use(require('connect-history-api-fallback')())
 
 // serve webpack bundle output
@@ -68,36 +89,37 @@ app.use(devMiddleware)
 // compilation error display
 app.use(hotMiddleware)
 
-//
+
+// serve pure static assets
+const staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
+
 app.use(morgan('combined'))
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-//app.use(passport.initialize());
-//app.use(passport.session());
 
 app.use(cors())
+
 //Load Model
 let User = require('../src/models/Users')
-
-// serve pure static assets
-const staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 
-const uri =  (process.env.NODE_ENV === 'testing' || process.env.NODE_ENV === 'production')  ? '' : 'http://'+ config.dev.ipaddress +':' + port
+const uri = (process.env.NODE_ENV === 'testing' || process.env.NODE_ENV === 'production') ? '' : 'http://' + config.dev.ipaddress + ':' + port
 
 var _resolve
 const readyPromise = new Promise(resolve => {
   _resolve = resolve
 })
 
+//sets up sessions
 const session = require('express-session')
 let sess = {
   secret: 'keyboard cat',
   cookie: {}
 }
- 
+
 if (app.get('env') === 'production') {
   app.set('trust proxy', 1) // trust first proxy
   sess.cookie.secure = true // serve secure cookies
@@ -112,31 +134,38 @@ const io = require('socket.io')(server)
 
 //setup db connection
 const db = require('../config/db/db.base.conf')
-//const localLogin = require('../config/passport/local.login.passport')
-//const localSignup= require('../config/passport/local.signup.passport')
+app.get('/', (req, res) => {
+  let sess = req.session
 
-//passport.use(localLogin)
-//passport.use(localSignup)
-
-app.post('/login', (req, res) =>{
+  if(sess.email){
+    /** This line checks for Session existence. */
+  }
+  else
+  {
+    console.log('Login mofo')
+    res.render('index.html')
+  }
+})
+app.post('/login', (req, res) => {
 
   let username = req.body.username
   let password = req.body.password
+  let sess = req.session
 
   let User = require('../src/models/Users')
 
-  User.findOne({username:username, password:password},   (err, user) => {
+  User.findOne({ username: username, password: password }, (err, user) => {
     if (err) { return done(err); }
     if (user) {
       res.send('You logged in')
-    }else{
+    } else {
       res.send('Congrats you have logged in')
     }
   })
-  
+
 });
 
-app.post('/register', (req,res) =>{
+app.post('/register', (req, res) => {
   let username = req.body.username
   let password = req.body.password
   let first = req.body.fname
@@ -154,13 +183,13 @@ app.post('/register', (req,res) =>{
   })
 
   new_user.save(err => console.error(err))
-  res.send('User: '+username+' registered')
+  res.send('User: ' + username + ' registered')
 });
 
 console.log('> Starting dev server...')
 devMiddleware.waitUntilValid(() => {
   console.log('> Listening at ' + uri + '\n')
-  console
+
   // when env is testing, don't need open it
   if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
     opn(uri)
@@ -171,5 +200,5 @@ devMiddleware.waitUntilValid(() => {
 module.exports = {
   app: app,
   ready: readyPromise,
-  close: () => {    server.close()  }
+  close: () => { server.close() }
 }

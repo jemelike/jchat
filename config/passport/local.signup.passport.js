@@ -2,9 +2,10 @@ const LocalStrategy = require('passport-local').Strategy;
 const User = require('../../src/models/Users')
 
 let validate = (password, cb) => {
-    if(password && typeof password == String )
-    return true
+    if (password && typeof password == String)
+        return true
 }
+
 module.exports = new LocalStrategy(
     (username, password, done) => {
         User.findOne({ username: username }, function (err, user) {
@@ -15,9 +16,9 @@ module.exports = new LocalStrategy(
                     username,
                     password
                 })
-                
-                new_user.save((err)=>{ console.error(err)})
+
+                new_user.save((err) => { console.error(err) })
             }
             return done(null, user);
-          });
+        });
     })
