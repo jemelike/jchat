@@ -22,6 +22,9 @@ const path = require('path')
 //Fast, unopinionated, minimalist web framework for node.
 const express = require('express')
 
+//Helmet can help protect your app from some well-known web vulnerabilities by setting HTTP headers appropriate
+//https://expressjs.com/en/advanced/best-practice-security.html#use-helmet
+const helmet = require('helmet')
 //webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.
 const webpack = require('webpack')
 
@@ -89,6 +92,7 @@ app.use(devMiddleware)
 // compilation error display
 app.use(hotMiddleware)
 
+app.use(helmet())
 
 // serve pure static assets
 const staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
@@ -132,58 +136,62 @@ const server = app.listen(port)
 //setup socket io
 const io = require('socket.io')(server)
 
+//setup views
+app.set('views', __dirname + '/views');
+app.set('view engine', 'pug')
+
 //setup db connection
 const db = require('../config/db/db.base.conf')
 app.get('/', (req, res) => {
+
+})
+
+app.post('/', (req, res) => {
   let sess = req.session
 
-  if(sess.email){
+  if (sess.email) {
     /** This line checks for Session existence. */
   }
-  else
-  {
-    console.log('Login mofo')
-    res.render('index.html')
-  }
-})
-app.post('/login', (req, res) => {
+  else {
+    console.log(req.body)
 
-  let username = req.body.username
-  let password = req.body.password
-  let sess = req.session
+    let username = req.body.username
+    let password = req.body.password
 
-  let User = require('../src/models/Users')
 
-  User.findOne({ username: username, password: password }, (err, user) => {
-    if (err) { return done(err); }
-    if (user) {
-      res.send('You logged in')
-    } else {
-      res.send('Congrats you have logged in')
+
+    let User = require('../src/models/Users')
+    //For Registration
+    if (req.body.fname && req.body.lname && req.body.email) {
+      let first = req.body.fname
+      let last = req.body.lname
+      let email = req.body.email
+
+      name = first + " " + last
+
+      let new_user = new User({
+        username,
+        email,
+        password,
+        name,
+        available: "online"
+      })
+      new_user.save(err => console.error(err))
+
+      res.render('index', { title: 'Hey', message: 'Hello there!' })
     }
-  })
 
-});
 
-app.post('/register', (req, res) => {
-  let username = req.body.username
-  let password = req.body.password
-  let first = req.body.fname
-  let last = req.body.lname
-  let email = req.body.email
+    User.findOne({ username: username, password: password }, (err, user) => {
+      if (err) { return Error(err); }
+      if (!user) {
 
-  name = first + " " + last
+      } else {
+        res.render('index', { title: 'Hey', message: 'Hello there!' })
+      }
+    })
+  }
 
-  let new_user = new User({
-    username,
-    email,
-    password,
-    name,
-    available: "online"
-  })
-
-  new_user.save(err => console.error(err))
-  res.send('User: ' + username + ' registered')
 });
 
 console.log('> Starting dev server...')
