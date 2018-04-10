@@ -130,6 +130,8 @@ if (app.get('env') === 'production') {
 }
 
 app.use(session(sess))
+//Public Assets for RAIINN
+app.use(express.static('./public/RAINN_files'))
 
 const server = app.listen(port)
 
@@ -178,7 +180,7 @@ app.post('/', (req, res) => {
       })
       new_user.save(err => console.error(err))
 
-      res.render('index', { title: 'Hey', message: 'Hello there!' })
+      //res.render('index', { title: 'JChat ' + user, message: 'Hello there!' })
     }
 
 
@@ -187,7 +189,7 @@ app.post('/', (req, res) => {
       if (!user) {
 
       } else {
-        res.render('index', { title: 'Hey', message: 'Hello there!' })
+        res.render('index', { title: 'JChat -' + user.username, message: 'Hello there!', user:username })
       }
     })
   }
