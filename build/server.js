@@ -135,7 +135,7 @@ app.use(express.static('./public/RAINN_files'))
 
 const server = app.listen(port)
 
-//setup socket io
+//Setup socket io
 const io = require('socket.io')(server)
 
 //setup views
@@ -144,6 +144,48 @@ app.set('view engine', 'pug')
 
 //setup db connection
 const db = require('../config/db/db.base.conf')
+
+// Channel set up
+var chat = io.of('/chat');
+var queue = io.of('/queue');
+
+chat.on('connection',
+  (socket) => {
+
+    socket.on('chat-message', (data) => {
+      socket.emit('chat-message', data)
+      socket.broadcast.emit('chat-message', data)
+
+      // Chat API
+      app.post('/messages', (req, res) => {
+        const message = data.message;
+        const sender = data.sender;
+        const chatID = data.chatID;
+
+        const post_message = new Message({
+          message,
+          sender,
+          chatID,
+        })
+      })
+    })
+
+  });
+let total = [];
+queue.on('connection',
+  (socket) => {
+    socket.on('enter-eng-queue', (data) => {
+      total.push(data)
+      console.log(data)
+      socket.broadcast.emit('new-person', total)
+    })
+  })
+
+queue.on('disconnect', (socket) => {
+  socket.on('')
+})
+
+// Representationl State Transfere (REST) and route handling
 app.get('/', (req, res) => {
 
 })
