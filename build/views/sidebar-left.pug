@@ -1,0 +1,66 @@
+.sidebar
+  .logo
+    img(src="/img/logo.png", alt="")
+  .panel-group#accordion1
+    .panel.panel-primary 
+      .panel-heading
+        a(href="#staffPanel" data-toggle="collapse" data-parent="#accordion1" class="collapsed")
+         i.fa.fa-users
+         .
+            Online
+      #staffPanel.panel-collapse.collapse
+        .panel-body
+          ul.nav.nav-stacked
+            li.active(role="presentation")
+              a(href="http://startdesigns.in/Rainn/#") Shaban R
+            li(role="presentation")
+              a(href="http://startdesigns.in/Rainn/#") Catherine D
+    .panel.panel-primary
+      .panel-heading
+        a(href="#statistics" data-toggle="collapse" data-parent="#accordion1")
+          i.fa.fa-pie-chart 
+          .
+              Demographics
+      #statistics.panel-collapse.collapse.in
+        .panel-body
+          .col-xs-12
+            form(lpformnum="1")
+              .form-group
+                select(class="form-control" name="Age")
+                  option -- Age --
+              .form-group
+                select(class="form-control" name="Gender")
+                  option -- Gender --
+              .form-group
+                select(class="form-control" name="User")
+                  option -- User --
+              .form-group
+                select(class="form-control" name="WhenAssaulted")
+                  option -- When Assaulted --
+              .form-group
+                select(class="form-control" name="FrequencyOfAssault")
+                  option -- Frequency Of Assault --
+              .form-group
+                select(class="form-control" name="ServiceProvided")
+                  option -- Service Provided -- 
+              .form-group
+                select(class="form-control" name="IssuesDiscussed")
+                  option -- Issues Discussed --
+              .form-group
+                select(class="form-control" name="Location")
+                  option -- Location --
+              .form-group
+                select(class="form-control" name="SpecialPopulation")
+                  option -- SpecialPopulation --
+              .form-group
+                select(class="form-control" name="Service")
+                  option -- Service -- 
+              .form-group
+                select(class="form-control" name="SessionType")
+                 option -- Session Type --
+              .form-group.text-center
+                button.btn.btn-sm.btn-success
+                  i.fa.fa-save
+                  .
+                    Save
+                

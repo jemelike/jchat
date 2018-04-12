@@ -1,0 +1,35 @@
+.main: .row: .col-xs-12
+    .panel.panel-primary.chat-panel-grp
+        .panel-heading
+            ul.nav.nav-tabs
+                li.active: a(data-toggle="tab" href="#chat01") Chat 01
+                li: a(data-toggle="tab" href="#chat02") Chat 02
+            button.collapse-page
+                img(src="/img/collapse-icon.png", alt="collapse")
+        .panel-body
+            .tab-content
+                #chat01.tab-pane.fade.in.active
+                    .panel.panel-default.chat-panel
+                        .panel-heading: i.fa.fa-wechat
+                        .panel-body: .form-group
+                            #messages.form-control.chat-box(rows="3", readonly)
+                            input#message.form-control.input-lg
+                        .panel-footer 
+                            button.btn.btn-sm.btn-danger.pull-left: i.fa.fa-power-off End Chat
+                            button.btn.btn-sm.btn-success.pull-right#send: i.fa.fa-paper-plane Send 
+                #chat02.tab-pane.fade
+                    .panel.panel-default.chat-panel
+                        .panel-heading 
+                            i.fa.fa-wechat Staff Chat
+                        .panel-body
+                            .form-group
+                                textarea.form-control.chat-box(rows="3")
+                                input.form-control.input-lg
+                        .panel-footer
+                            button.btn.btn-sm.btn-danger.pull-left: i.fa.fa-power-off
+                                .
+                                    End Chat
+                            button.btn.btn-sm.btn-success.pull-right#send
+                                i.fa.fa-paper-plane
+                                .
+                                    Send

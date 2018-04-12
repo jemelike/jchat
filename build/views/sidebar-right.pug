@@ -1,0 +1,27 @@
+.col-right
+    .panel.result-panel
+            .cols.col-xs-4#ENG-BOX
+                .number#ENG
+                    span#ENG-HOLDER 0
+                .name ENG
+            .cols.col-xs-4#SPA-BOX
+                .number#SPA
+                    span#SPA-HOLDER 0
+                .name SPA
+            .cols.col-xs-4#PRN-BOX
+                .number#PRN
+                    span#PRN-HOLDER 0
+                .name PRN
+    .panel.quick-response
+        .panel-body
+            ul.nav.nav-tabs
+                li.active: a(data-toggle="tab" href="http://startdesigns.in/Rainn/#home")
+                li: a( data-toggle="tab" href="http://startdesigns.in/Rainn/#menu1">Spanish)
+                li: a(data-toggle="tab" href="http://startdesigns.in/Rainn/#menu2")
+            .tab-content
+                #home.tab-pane.fade.in.active
+                    .search-bar
+                        input.form-control(type="text" placeholder="Search..")
+                    .bs-example.response-panel-grp
+                        .panel-group#accordion
+                            .panel.panel-navy
