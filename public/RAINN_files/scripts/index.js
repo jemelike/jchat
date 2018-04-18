@@ -1,4 +1,10 @@
 var ipaddress = '127.0.0.1'
+
+$( ".collapse-page" ).click(function() {
+  $( "body" ).toggleClass( "expand-on" );
+  $( ".chat-box" ).toggleClass( "expand" );
+});
+
 let buildQuotebox = (messages, id) => {
   jQuery('<p/>', {
     id: 'message' + id + messages.sender,
@@ -25,7 +31,9 @@ let loadMessages = (chatID) => {
   })
 
   promise.then((data) => {
+    console.log("------")
     console.log(data)
+    console.log("------")
     let currrent = data.message.filter(message => message.chatID === chatID)
     console.log(currrent)
 
@@ -38,20 +46,24 @@ let loadMessages = (chatID) => {
 }
 
 $(document).ready(() => {
+  console.log()
+  let user = $('#username').val()
+  var session = io.connect('http://' + ipaddress + ':8080/' + user)
   var chat = io.connect('http://' + ipaddress + ':8080/chat')
   var queue = io.connect('http://' + ipaddress + ':8080/queue')
   
 
   loadMessages('survivor-1')
-
+  $('#logout').click(function(){
+    io.emit();
+  })
   $('#send').click(function () {
     var chat_promise = new Promise((resolve, reject) => {
       let message = $('#message').val()
-      let user = $('#username').val()
 
       //Set user if it is empty
       if(!user)
-        user = "Staffer1"
+        user = "Staffer"
 
       let msg_info = {message, user}
       

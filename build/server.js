@@ -47,6 +47,8 @@ const proxyTable = config.dev.proxyTable
 const app = express()
 const compiler = webpack(webpackConfig)
 
+const router = express.Router()
+
 //An express-style development middleware for use with webpack bundles and allows for serving of the files emitted from webpack. This should be used for development only
 const devMiddleware = require('webpack-dev-middleware')(compiler, {
   publicPath: webpackConfig.output.publicPath,
@@ -84,7 +86,6 @@ Object.keys(proxyTable).forEach(function (context) {
 
 // handle fallback for HTML5 history API https://www.npmjs.com/package/connect-history-api-fallback
 app.use(require('connect-history-api-fallback')())
-
 // serve webpack bundle output
 app.use(devMiddleware)
 
@@ -108,6 +109,10 @@ app.use(cors())
 
 //Load Model
 let User = require('../src/models/Users')
+let Message = require('../src/models/Message')
+let Queue = require('../src/models/Queue')
+let Demographics = require('../src/models/Demographics')
+
 app.use(staticPath, express.static('./static'))
 
 const uri = (process.env.NODE_ENV === 'testing' || process.env.NODE_ENV === 'production') ? '' : 'http://' + config.dev.ipaddress + ':' + port
@@ -185,9 +190,101 @@ queue.on('disconnect', (socket) => {
   socket.on('')
 })
 
-// Representationl State Transfere (REST) and route handling
-app.get('/', (req, res) => {
+//Demographics API stuffs
+router.get("/demographics", (req, res) => {
+  Demographics.find({}, function (error, demographics) {
+    if (error) { console.error(error); }
+    res.send(
+      {
+        demographics: demographics
+      }
+    )
+  }).sort({ _id: -1 })
+})
 
+router.post('/posts', (req, res) => {
+  var db = req.db;
+  var age = Number(req.body.age);
+  var id = req.body.id;
+  var gender = req.body.gender;
+  var user = req.body.user;
+  var whenAssaulted = req.body.whenAssaulted;
+  var frequency = req.body.frequency;
+  var service_provided = req.body.service_provided;
+  var issues = req.body.issues;
+  var location = req.body.location;
+  var sp_pop = req.body.sp_pop;
+  var service = req.body.service;
+  var session_type = req.body.session_type;
+
+  var new_post = new Demographics({
+    id: id,
+    age: age,
+    gender: gender,
+    user: user,
+    whenAssaulted: whenAssaulted,
+    frequency: frequency,
+    service_provided: service_provided,
+    issues: issues,
+    location: location,
+    sp_pop: sp_pop,
+    service: service,
+    session_type: session_type
+
+  })
+
+  new_post.save(function (error) {
+    if (error) {
+      console.log(error)
+    }
+    res.send({
+      success: true,
+      message: 'Post saved successfully!'
+    })
+  })
+})
+
+
+router.get('/messages_sent', (req,res) => {
+  Message.find({}, function(error, message){
+    if(error) {console.error(error);}
+    res.send({
+      message
+    })
+  }).sort({_id: -1})
+})
+
+router.post('/messages', (req, res) => {
+  const body = req.body
+  console.log(body)
+  const message = body.message
+  const sender = body.sender
+  const chatID = body.chatID
+  
+  var new_post = new Message ({
+    "messages": message,
+    "sender":sender,
+    "chatID":chatID
+  })
+
+  console.log(new_post)
+  new_post.save(function (error) {
+    if (error) {
+      console.log(error)
+    }
+    res.send({
+      success: true,
+      message: 'Post saved successfully!'
+    })
+  })
+})
+
+app.use(router)
+//Login  Stuff
+app.get('/', (req, res) => {
+  if(req.session)
+    res.render('index', { title: 'JChat - ' + user.username, message: 'Hello there!', user:username })
+      
 })
 
 app.post('/', (req, res) => {
@@ -231,7 +328,7 @@ app.post('/', (req, res) => {
       if (!user) {
 
       } else {
-        res.render('index', { title: 'JChat -' + user.username, message: 'Hello there!', user:username })
+        res.render('index', { title: 'JChat - ' + user.username, message: 'Hello there!', user:username })
       }
     })
   }

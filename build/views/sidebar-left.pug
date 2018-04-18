@@ -24,7 +24,7 @@
       #statistics.panel-collapse.collapse.in
         .panel-body
           .col-xs-12
-            form(lpformnum="1")
+            form(lpformnum="1" method="POST" action="/")
               .form-group
                 select(class="form-control" name="Age")
                   option -- Age --
@@ -59,7 +59,7 @@
                 select(class="form-control" name="SessionType")
                  option -- Session Type --
               .form-group.text-center
-                button.btn.btn-sm.btn-success
+                button.btn.btn-sm.btn-success(type="submit")
                   i.fa.fa-save
                   .
                     Save
