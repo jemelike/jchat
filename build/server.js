@@ -136,7 +136,7 @@ if (app.get('env') === 'production') {
 
 app.use(session(sess))
 //Public Assets for RAIINN
-app.use(express.static('./public/RAINN_files'))
+app.use(express.static('./dist/RAINN_files'))
 
 const server = app.listen(port)
 
