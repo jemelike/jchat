@@ -30,6 +30,9 @@ module.exports = merge(baseWebpackConfig, {
       filename: './index.html',
       template: './index.html',
       inject: true
+    }),
+    new HtmlWebpackPlugin({
+	filename: './src/view/staffer.html'
     }), 
     new FaviconsWebpackPlugin('./src/assets/img/logo.png'),
     new FriendlyErrorsPlugin()

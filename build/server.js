@@ -112,11 +112,7 @@ const io = require('socket.io')(server)
 
 //setup db connection
 const db = require('../config/db/db.base.conf')
-//const localLogin = require('../config/passport/local.login.passport')
-//const localSignup= require('../config/passport/local.signup.passport')
 
-//passport.use(localLogin)
-//passport.use(localSignup)
 
 app.post('/login', (req, res) =>{
 
@@ -163,7 +159,7 @@ devMiddleware.waitUntilValid(() => {
   console
   // when env is testing, don't need open it
   if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
-    opn(uri)
+//    opn(uri)
   }
   _resolve()
 })
