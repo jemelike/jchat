@@ -1,3 +1,7 @@
+# Distribution
+dist/
+dev-dist/
+
 # Logs
 logs
 *.log
