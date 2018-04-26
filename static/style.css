@@ -1,7 +1,7 @@
 body{
 	font-family: 'Open Sans', sans-serif;
 	color: #3b4247;
-	background: url(../img/bg.png) #f3f6f9;
+	background: url(./img/bg.png) #f3f6f9;
 }
 h1, h2, h3, h4, h5, h6, .btn{
 	font-family: 'Raleway', sans-serif;
