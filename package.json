@@ -7,7 +7,7 @@
     "dev": "node build/server.js",
     "start": "node build/server.js",
     "build": "node build/build.js",
-    "build-dev" : "node build/build-dev.js",
+    "build-dev": "node build/build-dev.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -53,6 +53,7 @@
     "chai": "^3.5.0",
     "chalk": "^2.0.1",
     "chromedriver": "^2.27.2",
+    "clean-webpack-plugin": "^0.1.19",
     "connect-history-api-fallback": "^1.3.0",
     "copy-webpack-plugin": "^4.0.1",
     "cross-env": "^5.0.1",

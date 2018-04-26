@@ -9,7 +9,7 @@ let baseWebpackConfig = require('./webpack.base.conf')
 let HtmlWebpackPlugin = require('html-webpack-plugin')
 let FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 let FaviconsWebpackPlugin = require('favicons-webpack-plugin')
-
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 // add hot-reload related code to entry chunks
 Object.keys(baseWebpackConfig.entry).forEach(function (name) {
   baseWebpackConfig.entry[name] = ['./build/client'].concat(baseWebpackConfig.entry[name])
@@ -27,6 +27,8 @@ module.exports = merge(baseWebpackConfig, {
     chunkFilename: utils.assetsPath('js/[id].[hash].js')
   },
   plugins: [
+    new HtmlWebpackPlugin([]),
+    new CleanWebpackPlugin(['dev-dist']),
     new webpack.DefinePlugin({
       'process.env': config.dev.env
     }),
@@ -41,8 +43,8 @@ module.exports = merge(baseWebpackConfig, {
     new webpack.NoEmitOnErrorsPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
     
-  new HtmlWebpackPlugin({
-      filename: 'index.html',
+ /* new HtmlWebpackPlugin({
+      filename: './static/index.html',
       template: 'index.html',
       inject: true,
       minify: {
@@ -56,7 +58,7 @@ module.exports = merge(baseWebpackConfig, {
       chunksSortMode: 'dependency'
     }),
 new HtmlWebpackPlugin({
-        filename: 'staffer.html',
+        filename: './static/staffer.html',
         template: 'staffer.html',
         inject: true,
         minify: {
@@ -68,7 +70,7 @@ new HtmlWebpackPlugin({
       },
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
       chunksSortMode: 'dependency'
-    }),
+    }),*/
     new FaviconsWebpackPlugin('./src/assets/img/logo.png'),
     new FriendlyErrorsPlugin(),
       // keep module.id stable when vender modules does not change

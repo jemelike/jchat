@@ -74,8 +74,6 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-//app.use(passport.initialize());
-//app.use(passport.session());
 
 app.use(cors())
 //Load Model
@@ -84,7 +82,7 @@ let User = require('../src/models/Users')
 // serve pure static assets
 const staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
-
+if(process.env.NODE_ENV === "development") app.use(express.static('./dev-dist'))
 const uri =  (process.env.NODE_ENV === 'testing' || process.env.NODE_ENV === 'production')  ? '' : 'http://'+ config.dev.ipaddress +':' + port
 
 var _resolve
