@@ -104,10 +104,24 @@ if (app.get('env') === 'production') {
 app.use(session(sess))
 
 const server = app.listen(port)
-
 //setup socket io
 const io = require('socket.io')(server)
+let chatIDs = []
+let waitingQueue = []
 
+const queue = io.of('queue')
+
+queue.on('connection', function(socket) {
+ socket.emit('', {})
+ socket.on('enter', function(data){
+ console.log('survivor has entered the queue.') 
+ waitingQueue.push({data, arrivalTime: Date.now()})
+console.log(waitingQueue.length)
+console.log(waitingQueue)
+console.log(data)
+ 
+})
+})
 //setup db connection
 const db = require('../config/db/db.base.conf')
 

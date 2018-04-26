@@ -27,7 +27,6 @@ module.exports = merge(baseWebpackConfig, {
     chunkFilename: utils.assetsPath('js/[id].[hash].js')
   },
   plugins: [
-    new HtmlWebpackPlugin([]),
     new CleanWebpackPlugin(['dev-dist']),
     new webpack.DefinePlugin({
       'process.env': config.dev.env
@@ -43,8 +42,8 @@ module.exports = merge(baseWebpackConfig, {
     new webpack.NoEmitOnErrorsPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
     
- /* new HtmlWebpackPlugin({
-      filename: './static/index.html',
+ new HtmlWebpackPlugin({
+      filename: 'index.html',
       template: 'index.html',
       inject: true,
       minify: {
@@ -56,7 +55,7 @@ module.exports = merge(baseWebpackConfig, {
       },
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
       chunksSortMode: 'dependency'
-    }),
+    }),/*
 new HtmlWebpackPlugin({
         filename: './static/staffer.html',
         template: 'staffer.html',
