@@ -24,6 +24,7 @@ module.exports = {
   dev: {
     env: require('./dev.env'),
     ipaddress:'52.38.2.232',
+    assetsRoot: path.resolve(__dirname, '../dev-dist/'),
     port: 8080,
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
