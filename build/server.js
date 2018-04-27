@@ -114,13 +114,13 @@ const queue = io.of('queue')
 queue.on('connection', function(socket) {
  socket.emit('', {})
  socket.on('enter', function(data){
- console.log('survivor has entered the queue.') 
- waitingQueue.push({data, arrivalTime: Date.now()})
-console.log(waitingQueue.length)
-console.log(waitingQueue)
-console.log(data)
+ waitingQueue.push({data, arrivalTime: Date.now(), channelName: ''}) 
+ socket.broadcast.emit('enter',{line: waitingQueue.length})
+
+ socket.on('create-chat', function(socket){
  
-})
+ }) 
+ })
 })
 //setup db connection
 const db = require('../config/db/db.base.conf')
