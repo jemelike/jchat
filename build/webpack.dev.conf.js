@@ -31,6 +31,11 @@ module.exports = merge(baseWebpackConfig, {
       template: 'index.html',
       inject: true
     }),
+    new HtmlWebpackPlugin({
+      filename: 'profile.html',
+      template: 'profile.html',
+      inject: true
+    }),
     new FaviconsWebpackPlugin('./src/assets/img/logo.png'),
     new FriendlyErrorsPlugin()
   ]
