@@ -10,6 +10,10 @@ function resolve (dir) {
 module.exports = {
   entry: {
     app: './src/main.js'
+  }, performance: {
+    maxAssetSize: 100,
+    maxEntrypointSize: 100,
+    hints: 'warning'
   },
   output: {
     path: config.build.assetsRoot,
