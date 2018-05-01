@@ -27,7 +27,12 @@
 
     <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet">
-  </head>
+<script src="./jquery/1.11.1/jquery.js"></script>
+<script src="./socket.io/socket.io.dev.js"></script>
+<script src="./js/staffer.js"></script>
+  
+  
+</head>
 
   <body data-gr-c-s-loaded="true">
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -159,13 +164,13 @@
                       <div class="panel-heading"><i class="fa fa-wechat"></i></div>
                       <div class="panel-body">
                         <div class="form-group">
-                          <textarea rows="3" class="form-control chat-box"></textarea>
-                           <input type="text" class="form-control input-lg">
+                          <div id=messages rows="3" class="form-control chat-box"></div>
+                           <input id="message" type="text" class="form-control input-lg">
                         </div>
                       </div>
                       <div class="panel-footer">
                         <button class="btn btn-sm btn-danger pull-left"><i class="fa fa-power-off"></i> End Chat</button>
-                        <button class="btn btn-sm btn-success pull-right"><i class="fa fa-paper-plane"></i> send</button>
+                        <button id="send"class="btn btn-sm btn-success pull-right"><i class="fa fa-paper-plane"></i> send</button>
                       </div>
                     </div>
                   </div>
