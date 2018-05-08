@@ -22,6 +22,8 @@
   },
   "homepage": "https://github.com/jemelike/jchat#readme",
   "dependencies": {
+    "auth0-js": "^9.5.1",
+    "auth0-lock": "^11.6.0",
     "axios": "^0.18.0",
     "body-parser": "^1.18.2",
     "bootstrap": "^4.0.0",
@@ -32,6 +34,7 @@
     "font-awesome": "^4.7.0",
     "jquery": "^3.3.1",
     "jquery-ui": "^1.12.1",
+    "jwt-decode": "^2.2.0",
     "mongoose": "^5.0.12",
     "morgan": "^1.9.0",
     "node-sass": "^4.8.3",
@@ -40,6 +43,7 @@
     "passport-auth0": "^0.6.1",
     "passport-local": "^1.0.0",
     "popper.js": "^1.14.1",
+    "redis": "^2.8.0",
     "sass-loader": "^6.0.7",
     "socket.io": "^1.7.3",
     "socketio-jwt": "^4.5.0"

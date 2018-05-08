@@ -531,3 +531,18 @@ body.expand-on .navbar-fixed-top{
     background-color: #5a4740;
     border-color: #5a4740;
 }*/
+#messages{
+	height: 250px;
+	overflow-y: scroll
+}
+
+#messages p {
+	color: #e5eaef;
+	display: block;
+	height: 50px;
+	font-size: 20px
+}
+
+tab{
+	padding: 15px
+}

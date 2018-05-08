@@ -82,8 +82,8 @@ let Message = require('../src/models/Message')
 // serve pure static assets
 const staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
-if(process.env.NODE_ENV === "development") app.use(express.static('./dev-dist'))
-const uri =  (process.env.NODE_ENV === 'testing' || process.env.NODE_ENV === 'production')  ? '' : 'http://'+ config.dev.ipaddress +':' + port
+if (process.env.NODE_ENV === "development") app.use(express.static('./dev-dist'))
+const uri = (process.env.NODE_ENV === 'testing' || process.env.NODE_ENV === 'production') ? '' : 'http://' + config.dev.ipaddress + ':' + port
 
 var _resolve
 const readyPromise = new Promise(resolve => {
@@ -95,7 +95,7 @@ let sess = {
   secret: 'keyboard cat',
   cookie: {}
 }
- 
+
 if (app.get('env') === 'production') {
   app.set('trust proxy', 1) // trust first proxy
   sess.cookie.secure = true // serve secure cookies
@@ -131,57 +131,61 @@ chat.on('connection',
       })
     })
 
-})
+  })
 
-queue.on('connection', function(socket) {
- socket.emit('', {})
- socket.on('enter', function(data){
- waitingQueue.push({data, arrivalTime: Date.now(), channelName: ''}) 
- socket.broadcast.emit('enter',{line: waitingQueue.length})
+queue.on('connection', function (socket) {
 
- socket.on('create-chat', function(socket){
- 
- }) 
- })
+  socket.emit('load-queue', {line: waitingQueue.length})
+  socket.on('enter', function (data) {
+    waitingQueue.push({ data, arrivalTime: Date.now(), channelName: '' })
+    socket.broadcast.emit('enter', { line: waitingQueue.length })
+
+  })
+
+  socket.on('take-chat', function (data) {
+    let next = waitingQueue.shift()
+    chatIDs.push(next)
+    socket.emit('update-queue', { line: waitingQueue.length })
+  })
 })
 //setup db connection
 const db = require('../config/db/db.base.conf')
 
-app.post('/login', (req, res) =>{
+app.post('/login', (req, res) => {
 
   let username = req.body.username
   let password = req.body.password
 
   let User = require('../src/models/Users')
 
-  User.findOne({username:username, password:password},   (err, user) => {
+  User.findOne({ username: username, password: password }, (err, user) => {
     if (err) { return done(err); }
     if (user) {
       res.send('You logged in')
-    }else{
+    } else {
       res.send('Congrats you have logged in')
     }
   })
-  
+
 });
 app.post('/messages', (req, res) => {
   const body = req.body
   console.log(body)
- /*  const userAgent = req.get('user-agent')
- console.log(md)
-  console.log('________________________________\nBODY')
-  console.log(body)
-  console.log('________________________________\nHEADER')
-  console.log(userAgent)
-  console.log('________________________________')  */
+  /*  const userAgent = req.get('user-agent')
+  console.log(md)
+   console.log('________________________________\nBODY')
+   console.log(body)
+   console.log('________________________________\nHEADER')
+   console.log(userAgent)
+   console.log('________________________________')  */
   const message = body.message
   const sender = body.sender
   const chatID = body.chatID
-  
-  var new_post = new Message ({
+
+  var new_post = new Message({
     "messages": message,
-    "sender":sender,
-    "chatID":chatID
+    "sender": sender,
+    "chatID": chatID
   })
 
   console.log(new_post)
@@ -196,16 +200,16 @@ app.post('/messages', (req, res) => {
   })
 })
 
-app.get('/messages_sent', (req,res) => {
-  Message.find({}, function(error, message){
-    if(error) {console.error(error);}
+app.get('/messages_sent', (req, res) => {
+  Message.find({}, function (error, message) {
+    if (error) { console.error(error); }
     res.send({
       message
     })
-  }).sort({_id: -1})
+  }).sort({ _id: -1 })
 })
 
-app.post('/register', (req,res) =>{
+app.post('/register', (req, res) => {
   let username = req.body.username
   let password = req.body.password
   let first = req.body.fname
@@ -223,7 +227,7 @@ app.post('/register', (req,res) =>{
   })
 
   new_user.save(err => console.error(err))
-  res.send('User: '+username+' registered')
+  res.send('User: ' + username + ' registered')
 });
 
 console.log('> Starting dev server...')
@@ -232,7 +236,7 @@ devMiddleware.waitUntilValid(() => {
   console
   // when env is testing, don't need open it
   if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
-//    opn(uri)
+    //    opn(uri)
   }
   _resolve()
 })
@@ -240,5 +244,5 @@ devMiddleware.waitUntilValid(() => {
 module.exports = {
   app: app,
   ready: readyPromise,
-  close: () => {    server.close()  }
+  close: () => { server.close() }
 }

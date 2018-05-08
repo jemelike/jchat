@@ -1,6 +1,7 @@
 const app = require('./components/app')
 const routes = require('./routes')
 let body = $("body")
+var auth0 = require('../static/auth0/lock.min.js');
 
 
 window.addEventListener('load', function (e) {
