@@ -76,8 +76,6 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(cors())
-//Load Model
-let User = require('../src/models/Users')
 
 // serve pure static assets
 const staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
@@ -106,64 +104,9 @@ app.use(session(sess))
 const server = app.listen(port)
 //setup socket io
 const io = require('socket.io')(server)
-let chatIDs = []
-let waitingQueue = []
 
-const queue = io.of('queue')
-
-queue.on('connection', function(socket) {
- socket.emit('', {})
- socket.on('enter', function(data){
- waitingQueue.push({data, arrivalTime: Date.now(), channelName: ''}) 
- socket.broadcast.emit('enter',{line: waitingQueue.length})
-
- socket.on('create-chat', function(socket){
- 
- }) 
- })
-})
 //setup db connection
 const db = require('../config/db/db.base.conf')
-
-
-app.post('/login', (req, res) =>{
-
-  let username = req.body.username
-  let password = req.body.password
-
-  let User = require('../src/models/Users')
-
-  User.findOne({username:username, password:password},   (err, user) => {
-    if (err) { return done(err); }
-    if (user) {
-      res.send('You logged in')
-    }else{
-      res.send('Congrats you have logged in')
-    }
-  })
-  
-});
-
-app.post('/register', (req,res) =>{
-  let username = req.body.username
-  let password = req.body.password
-  let first = req.body.fname
-  let last = req.body.lname
-  let email = req.body.email
-
-  name = first + " " + last
-
-  let new_user = new User({
-    username,
-    email,
-    password,
-    name,
-    available: "online"
-  })
-
-  new_user.save(err => console.error(err))
-  res.send('User: '+username+' registered')
-});
 
 console.log('> Starting dev server...')
 devMiddleware.waitUntilValid(() => {
